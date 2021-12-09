@@ -20,14 +20,14 @@ class RandomNumberGeneratorWorker(
         raheem("$id stopped")
     }
 
-    // each second generates random number from 0 to 100
+    // each 3 seconds generates random number from 0 to 100
     private fun generateRandomNumber() {
         var i = 0
         while (i < 5 && !isStopped) {
             try {
-                Thread.sleep(1000)
+                Thread.sleep(3000)
                 i++
-                raheem("$id -> ${Random.nextInt(0, 100).toString()}")
+                raheem("$id -> ${Random.nextInt(0, 100)}")
             } catch (e: Exception) {
                 raheem("Exception thrown in generateRandomNumber $id -> ${e.message}")
             }
