@@ -66,4 +66,40 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:text="Stop work 3" />
+
+    <TextView
+        android:id="@+id/work_four_status_t"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        tools:text="raheem" />
+
+    <ProgressBar
+        android:id="@+id/work_four_progress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/work_four_start_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="Start work 4" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/work_four_stop_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="Stop work 4" />
 </LinearLayout>

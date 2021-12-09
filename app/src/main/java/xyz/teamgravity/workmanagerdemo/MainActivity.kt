@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var workOne: WorkRequest
     private lateinit var workTwo: WorkRequest
     private lateinit var workThree: WorkRequest
+    private lateinit var workFour: WorkRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         workOne()
         workTwo()
         workThree()
+        workFour()
     }
 
     private fun button() {
@@ -47,6 +49,8 @@ class MainActivity : AppCompatActivity() {
         onWorkTwoStop()
         onWorkThreeStart()
         onWorkThreeStop()
+        onWorkFourStart()
+        onWorkFourStop()
     }
 
     private fun workOne() {
@@ -74,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                     WorkInfo.State.SUCCEEDED -> workTwoStatusT.text = "Work Two is succeeded"
                     WorkInfo.State.CANCELLED -> workTwoStatusT.text = "Work Two is cancelled"
                     WorkInfo.State.RUNNING -> workTwoStatusT.text = "Work Two is running..."
+                    else -> Unit
                 }
             }
         }
@@ -86,6 +91,21 @@ class MainActivity : AppCompatActivity() {
             .addTag(WORK_THREE)
             .setInputData(workDataOf(RandomNumberGeneratorWorker.ONE_EXTRA to "Tupac is the best"))
             .build()
+    }
+
+    private fun workFour() {
+        binding.apply {
+            workFour = OneTimeWorkRequest.from(ProgressCoroutineWorker::class.java)
+            workFourProgress.max = 100
+
+            workManager.getWorkInfoByIdLiveData(workFour.id).observe(this@MainActivity) { workInfo ->
+                workInfo?.let {
+                    val progress = workInfo.progress.getInt(ProgressCoroutineWorker.PROGRESS_EXTRA, 0)
+                    workFourStatusT.text = progress.toString()
+                    workFourProgress.progress = progress
+                }
+            }
+        }
     }
 
     private fun onWorkOneStart() {
@@ -121,6 +141,18 @@ class MainActivity : AppCompatActivity() {
     private fun onWorkThreeStop() {
         binding.workThreeStopB.setOnClickListener {
             workManager.cancelAllWorkByTag(WORK_THREE)
+        }
+    }
+
+    private fun onWorkFourStart() {
+        binding.workFourStartB.setOnClickListener {
+            workManager.enqueue(workFour)
+        }
+    }
+
+    private fun onWorkFourStop() {
+        binding.workFourStopB.setOnClickListener {
+            workManager.cancelWorkById(workFour.id)
         }
     }
 }
