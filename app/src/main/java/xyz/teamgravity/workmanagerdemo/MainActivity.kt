@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         onWorkThreeStop()
         onWorkFourStart()
         onWorkFourStop()
+        onWorkChainStart()
     }
 
     private fun workOne() {
@@ -153,6 +154,15 @@ class MainActivity : AppCompatActivity() {
     private fun onWorkFourStop() {
         binding.workFourStopB.setOnClickListener {
             workManager.cancelWorkById(workFour.id)
+        }
+    }
+
+    private fun onWorkChainStart() {
+        binding.workChainStartB.setOnClickListener {
+            workManager
+                .beginWith(listOf(workTwo as OneTimeWorkRequest, workFour  as OneTimeWorkRequest))
+                .then(workThree as OneTimeWorkRequest)
+                .enqueue()
         }
     }
 }

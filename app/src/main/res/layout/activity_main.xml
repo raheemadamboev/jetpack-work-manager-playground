@@ -102,4 +102,13 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:text="Stop work 4" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/work_chain_start_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="Start Work Chain" />
 </LinearLayout>
