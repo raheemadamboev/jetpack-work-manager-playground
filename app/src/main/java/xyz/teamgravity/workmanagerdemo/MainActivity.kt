@@ -11,6 +11,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val WORK_ONE = "workOne"
         private const val WORK_TWO = "workTwo"
+        private const val WORK_THREE = "workThree"
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var workManager: WorkManager
     private lateinit var workOne: WorkRequest
     private lateinit var workTwo: WorkRequest
+    private lateinit var workThree: WorkRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +48,12 @@ class MainActivity : AppCompatActivity() {
             .addTag(WORK_TWO)
             .setConstraints(twoConstraints)
             .build()
+
+        // initial delayed work, after 15 seconds it gets executed
+        workThree = OneTimeWorkRequestBuilder<RandomNumberGeneratorWorker>()
+            .setInitialDelay(15, TimeUnit.SECONDS)
+            .addTag(WORK_THREE)
+            .build()
     }
 
     private fun button() {
@@ -53,6 +61,8 @@ class MainActivity : AppCompatActivity() {
         onWorkOneStop()
         onWorkTwoStart()
         onWorkTwoStop()
+        onWorkThreeStart()
+        onWorkThreeStop()
     }
 
     private fun onWorkOneStart() {
@@ -76,6 +86,18 @@ class MainActivity : AppCompatActivity() {
     private fun onWorkTwoStop() {
         binding.workTwoStopB.setOnClickListener {
             workManager.cancelAllWorkByTag(WORK_TWO)
+        }
+    }
+
+    private fun onWorkThreeStart() {
+        binding.workThreeStartB.setOnClickListener {
+            workManager.enqueue(workThree)
+        }
+    }
+
+    private fun onWorkThreeStop() {
+        binding.workThreeStopB.setOnClickListener {
+            workManager.cancelAllWorkByTag(WORK_THREE)
         }
     }
 }
