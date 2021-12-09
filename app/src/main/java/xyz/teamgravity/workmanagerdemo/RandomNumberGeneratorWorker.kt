@@ -10,8 +10,12 @@ class RandomNumberGeneratorWorker(
     workerParameters: WorkerParameters
 ) : Worker(context, workerParameters) {
 
+    companion object {
+        const val ONE_EXTRA = "oneExtra"
+    }
+
     override fun doWork(): Result {
-        generateRandomNumber()
+        generateRandomNumber(inputData.getString(ONE_EXTRA))
         return Result.success()
     }
 
@@ -21,13 +25,14 @@ class RandomNumberGeneratorWorker(
     }
 
     // each 3 seconds, it generates random number from 0 to 100
-    private fun generateRandomNumber() {
+    private fun generateRandomNumber(oneExtra: String?) {
         var i = 0
         while (i < 5 && !isStopped) {
             try {
                 Thread.sleep(3000)
                 i++
                 raheem("$id -> ${Random.nextInt(0, 100)}")
+                oneExtra?.let { raheem(it) }
             } catch (e: Exception) {
                 raheem("Exception thrown in generateRandomNumber $id -> ${e.message}")
             }

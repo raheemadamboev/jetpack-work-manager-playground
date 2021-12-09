@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         workThree = OneTimeWorkRequestBuilder<RandomNumberGeneratorWorker>()
             .setInitialDelay(15, TimeUnit.SECONDS)
             .addTag(WORK_THREE)
+            .setInputData(workDataOf(RandomNumberGeneratorWorker.ONE_EXTRA to "Tupac is the best"))
             .build()
     }
 
