@@ -10,7 +10,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val WORK_ONE = "workOne"
-        private const val WORK_TWO = "workTwo"
         private const val WORK_THREE = "workThree"
     }
 
@@ -27,34 +26,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         lateInIt()
+        works()
         button()
     }
 
     private fun lateInIt() {
         workManager = WorkManager.getInstance(applicationContext)
+    }
 
-        // each 15 minutes, this work gets executed
-        workOne = PeriodicWorkRequestBuilder<RandomNumberGeneratorWorker>(15, TimeUnit.MINUTES)
-            .addTag(WORK_ONE)
-            .build()
-
-        // when there is wifi and device is charging, this work gets executed
-        val twoConstraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.UNMETERED)
-            .setRequiresCharging(true)
-            .build()
-
-        workTwo = OneTimeWorkRequestBuilder<RandomNumberGeneratorWorker>()
-            .addTag(WORK_TWO)
-            .setConstraints(twoConstraints)
-            .build()
-
-        // initial delayed work, after 15 seconds it gets executed
-        workThree = OneTimeWorkRequestBuilder<RandomNumberGeneratorWorker>()
-            .setInitialDelay(15, TimeUnit.SECONDS)
-            .addTag(WORK_THREE)
-            .setInputData(workDataOf(RandomNumberGeneratorWorker.ONE_EXTRA to "Tupac is the best"))
-            .build()
+    private fun works() {
+        workOne()
+        workTwo()
+        workThree()
     }
 
     private fun button() {
@@ -64,6 +47,45 @@ class MainActivity : AppCompatActivity() {
         onWorkTwoStop()
         onWorkThreeStart()
         onWorkThreeStop()
+    }
+
+    private fun workOne() {
+        // each 15 minutes, this work gets executed
+        workOne = PeriodicWorkRequestBuilder<RandomNumberGeneratorWorker>(15, TimeUnit.MINUTES)
+            .addTag(WORK_ONE)
+            .build()
+    }
+
+    private fun workTwo() {
+        binding.apply {
+            // when there is wifi and device is charging, this work gets executed
+            val twoConstraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .setRequiresCharging(true)
+                .build()
+
+            workTwo = OneTimeWorkRequestBuilder<RandomNumberGeneratorWorker>()
+                .setConstraints(twoConstraints)
+                .build()
+
+            // observe work
+            workManager.getWorkInfoByIdLiveData(workTwo.id).observe(this@MainActivity) { workInfo ->
+                when (workInfo?.state) {
+                    WorkInfo.State.SUCCEEDED -> workTwoStatusT.text = "Work Two is succeeded"
+                    WorkInfo.State.CANCELLED -> workTwoStatusT.text = "Work Two is cancelled"
+                    WorkInfo.State.RUNNING -> workTwoStatusT.text = "Work Two is running..."
+                }
+            }
+        }
+    }
+
+    private fun workThree() {
+        // initial delayed work, after 15 seconds it gets executed
+        workThree = OneTimeWorkRequestBuilder<RandomNumberGeneratorWorker>()
+            .setInitialDelay(15, TimeUnit.SECONDS)
+            .addTag(WORK_THREE)
+            .setInputData(workDataOf(RandomNumberGeneratorWorker.ONE_EXTRA to "Tupac is the best"))
+            .build()
     }
 
     private fun onWorkOneStart() {
@@ -86,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun onWorkTwoStop() {
         binding.workTwoStopB.setOnClickListener {
-            workManager.cancelAllWorkByTag(WORK_TWO)
+            workManager.cancelWorkById(workTwo.id)
         }
     }
 
