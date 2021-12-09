@@ -20,7 +20,7 @@ class RandomNumberGeneratorWorker(
         raheem("$id stopped")
     }
 
-    // each 3 seconds generates random number from 0 to 100
+    // each 3 seconds, it generates random number from 0 to 100
     private fun generateRandomNumber() {
         var i = 0
         while (i < 5 && !isStopped) {
